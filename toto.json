@@ -1,0 +1,17 @@
+
+[
+  {
+    "repository_name": "acm-admin-tools",
+    "cycle": "2.0.0",
+    "product": "devex-maven-plugin",
+    "reason": "Version 2.0.0 is valid as of 2024-10-03. Latest valid version is 2.0.0 (source: ACT-INT) Minimum valid version is 1.x (source: ACT-INT)",
+    "status": "Compliant"
+  },
+  {
+    "repository_name": "acm-admin-tools",
+    "cycle": "8",
+    "product": "java",
+    "reason": "Version 8 is outdated as of 2023-01-01. Consider upgrading to 23 (source: end-of-life).",
+    "status": "Outdated"
+  }
+]
