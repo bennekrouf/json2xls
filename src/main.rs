@@ -2,8 +2,7 @@
 use serde_json::Value;
 use std::fs::File;
 use std::io::BufReader;
-use xlsxwriter::{Workbook, Format, format::FormatAlignment, format::FormatColor, Worksheet};
-use std::collections::HashMap;
+use xlsxwriter::{Workbook, Format, format::FormatAlignment, format::FormatColor};
 
 // Externalized color constants
 const TITLE_BG_COLOR: u32 = 0x565E73;  // Blue background for title
@@ -11,17 +10,17 @@ const TITLE_FONT_COLOR: FormatColor = FormatColor::White;  // White font for tit
 const ROW_ALT_COLOR: u32 = 0xADD8E6;   // Light blue background for alternating rows
 
 // Function to merge cells and write headers
-fn write_merged_header(
-    worksheet: &mut Worksheet,
-    start_row: u32,
-    start_col: u16,
-    end_col: u16,
-    text: &str,
-    format: &Format,
-) -> Result<(), Box<dyn std::error::Error>> {
-    worksheet.merge_range(start_row, start_col, start_row, end_col, text, Some(format))?;
-    Ok(())
-}
+// fn write_merged_header(
+//     worksheet: &mut Worksheet,
+//     start_row: u32,
+//     start_col: u16,
+//     end_col: u16,
+//     text: &str,
+//     format: &Format,
+// ) -> Result<(), Box<dyn std::error::Error>> {
+//     worksheet.merge_range(start_row, start_col, start_row, end_col, text, Some(format))?;
+//     Ok(())
+// }
 
 // Function to generate an Excel file from JSON input
 fn generate_excel_from_json(json_file_path: &str, output_excel_file: &str) -> Result<(), Box<dyn std::error::Error>> {
