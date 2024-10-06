@@ -1,4 +1,3 @@
-
 use serde_json::Value;
 use std::fs::File;
 use std::io::BufReader;
@@ -8,6 +7,10 @@ use xlsxwriter::{Workbook, Format, format::FormatAlignment, format::FormatColor}
 const TITLE_BG_COLOR: u32 = 0x565E73;  // Blue background for title
 const TITLE_FONT_COLOR: FormatColor = FormatColor::White;  // White font for title
 const ROW_ALT_COLOR: u32 = 0xADD8E6;   // Light blue background for alternating rows
+
+// Externalized constants for JSON keys
+const REPOSITORY_NAME: &str = "repository_name";
+const DEBT: &str = "debt";
 
 // Function to generate an Excel file from JSON input
 pub fn generate_excel_from_json(json_file_path: &str, output_excel_file: &str) -> Result<(), Box<dyn std::error::Error>> {
@@ -45,9 +48,9 @@ pub fn generate_excel_from_json(json_file_path: &str, output_excel_file: &str) -
             // Ensure repositories_value is an array
             if let Value::Array(repositories) = repositories_value {
                 // Collect all unique keys from the "debt" array for headers
-                let mut debt_headers = vec!["repository_name".to_string()];
+                let mut debt_headers = vec![REPOSITORY_NAME.to_string()];
                 if let Some(Value::Object(repo)) = repositories.get(0) {
-                    if let Some(Value::Array(debt_array)) = repo.get("debt") {
+                    if let Some(Value::Array(debt_array)) = repo.get(DEBT) {
                         if let Some(Value::Object(debt)) = debt_array.get(0) {
                             for debt_key in debt.keys() {
                                 debt_headers.push(debt_key.clone());
@@ -65,9 +68,9 @@ pub fn generate_excel_from_json(json_file_path: &str, output_excel_file: &str) -
                 let mut row = 1;
                 for repository_value in repositories {
                     if let Value::Object(repository) = repository_value {
-                        if let Some(repo_name) = repository.get("repository_name") {
+                        if let Some(repo_name) = repository.get(REPOSITORY_NAME) {
                             if let Value::String(ref repo_name) = repo_name {
-                                if let Some(Value::Array(debts)) = repository.get("debt") {
+                                if let Some(Value::Array(debts)) = repository.get(DEBT) {
                                     for (i, debt_value) in debts.iter().enumerate() {
                                         if let Value::Object(debt) = debt_value {
                                             // Alternate between light blue and no color for the rows
@@ -105,4 +108,3 @@ pub fn generate_excel_from_json(json_file_path: &str, output_excel_file: &str) -
 
     Ok(())
 }
-
