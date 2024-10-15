@@ -1,0 +1,12 @@
+# JSON SETUP :
+json_file_path: "all_projects.json"
+repository_name_key: "application"
+object_array_key: "debt"
+
+
+# EXCEL SETUP
+output_excel_file: "all_output.xlsx"
+title_bg_color: "565E73"   # Blue background for title (as a string)
+title_font_color: "FFFFFF" # White font for title (as a string)
+row_alt_color: "ADD8E6"    # Light blue background for alternating rows (as a string)
+
