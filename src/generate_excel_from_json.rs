@@ -25,7 +25,7 @@ pub fn generate_excel_from_json(
     title_format
         .set_bold()
         .set_bg_color(FormatColor::Custom(config.title_bg_color))   // Use config title background color
-        .set_font_color(config.title_font_color)                    // Use config font color
+        .set_font_color(FormatColor::Custom(config.title_font_color))                    // Use config font color
         .set_align(FormatAlignment::Center);
 
     // Create format for alternating rows (custom light blue background)
