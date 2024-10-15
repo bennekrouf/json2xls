@@ -6,5 +6,5 @@ row_alt_color: "ADD8E6"
 
 # JSON keys
 repository_name_key: "repository_name"
-debt_key: "debt"
+object_array_key: "debt"
 

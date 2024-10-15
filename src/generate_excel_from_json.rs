@@ -3,18 +3,14 @@ use std::fs::File;
 use std::io::BufReader;
 use xlsxwriter::{Workbook, Format, format::FormatAlignment, format::FormatColor};
 
-// Externalized color constants
-const TITLE_BG_COLOR: u32 = 0x565E73;  // Blue background for title
-const TITLE_FONT_COLOR: FormatColor = FormatColor::White;  // White font for title
-const ROW_ALT_COLOR: u32 = 0xADD8E6;   // Light blue background for alternating rows
+use crate::models::ExcelConfig;
 
-// Externalized constants for JSON keys
-const REPOSITORY_NAME: &str = "repository_name";
-const DEBT: &str = "debt";
-
-// Function to generate an Excel file from JSON input
-pub fn generate_excel_from_json(json_file_path: &str, output_excel_file: &str) -> Result<(), Box<dyn std::error::Error>> {
+pub fn generate_excel_from_json(
+    config: ExcelConfig
+) -> Result<(), Box<dyn std::error::Error>> {
     // Parse the JSON file
+    let json_file_path = &config.json_file_path;
+    let output_excel_file = &config.output_excel_file;
     let file = File::open(json_file_path)?;
     let reader = BufReader::new(file);
 
@@ -28,13 +24,13 @@ pub fn generate_excel_from_json(json_file_path: &str, output_excel_file: &str) -
     let mut title_format = Format::new();
     title_format
         .set_bold()
-        .set_bg_color(FormatColor::Custom(TITLE_BG_COLOR))   // Externalized title background color
-        .set_font_color(TITLE_FONT_COLOR)                    // Externalized font color
+        .set_bg_color(FormatColor::Custom(config.title_bg_color))   // Use config title background color
+        .set_font_color(config.title_font_color)                    // Use config font color
         .set_align(FormatAlignment::Center);
 
     // Create format for alternating rows (custom light blue background)
     let mut light_blue_format = Format::new();
-    light_blue_format.set_bg_color(FormatColor::Custom(ROW_ALT_COLOR));  // Externalized alternating row color
+    light_blue_format.set_bg_color(FormatColor::Custom(config.row_alt_color));  // Use config alternating row color
 
     // Create a format for regular rows (no background color)
     let no_color_format = Format::new();
@@ -48,12 +44,12 @@ pub fn generate_excel_from_json(json_file_path: &str, output_excel_file: &str) -
             // Ensure repositories_value is an array
             if let Value::Array(repositories) = repositories_value {
                 // Collect all unique keys from the "debt" array for headers
-                let mut debt_headers = vec![REPOSITORY_NAME.to_string()];
+                let mut debt_headers = vec![config.repository_name_key.clone()];
                 if let Some(Value::Object(repo)) = repositories.get(0) {
-                    if let Some(Value::Array(debt_array)) = repo.get(DEBT) {
+                    if let Some(Value::Array(debt_array)) = repo.get(&config.object_array_key) {
                         if let Some(Value::Object(debt)) = debt_array.get(0) {
-                            for debt_key in debt.keys() {
-                                debt_headers.push(debt_key.clone());
+                            for object_array_key in debt.keys() {
+                                debt_headers.push(object_array_key.clone());
                             }
                         }
                     }
@@ -68,9 +64,9 @@ pub fn generate_excel_from_json(json_file_path: &str, output_excel_file: &str) -
                 let mut row = 1;
                 for repository_value in repositories {
                     if let Value::Object(repository) = repository_value {
-                        if let Some(repo_name) = repository.get(REPOSITORY_NAME) {
+                        if let Some(repo_name) = repository.get(&config.repository_name_key) {
                             if let Value::String(ref repo_name) = repo_name {
-                                if let Some(Value::Array(debts)) = repository.get(DEBT) {
+                                if let Some(Value::Array(debts)) = repository.get(&config.object_array_key) {
                                     for (i, debt_value) in debts.iter().enumerate() {
                                         if let Value::Object(debt) = debt_value {
                                             // Alternate between light blue and no color for the rows
@@ -81,11 +77,11 @@ pub fn generate_excel_from_json(json_file_path: &str, output_excel_file: &str) -
                                             };
 
                                             // Write repository_name in the first column
-                                            worksheet.write_string(row, 0, &repo_name, Some(format))?;
+                                            worksheet.write_string(row, 0, repo_name, Some(format))?;
 
                                             // Write debt details in subsequent columns
-                                            for (j, debt_key) in debt_headers.iter().skip(1).enumerate() {
-                                                if let Some(Value::String(debt_value)) = debt.get(debt_key) {
+                                            for (j, object_array_key) in debt_headers.iter().skip(1).enumerate() {
+                                                if let Some(Value::String(debt_value)) = debt.get(object_array_key) {
                                                     worksheet.write_string(row, (j + 1) as u16, debt_value, Some(format))?;
                                                 }
                                             }

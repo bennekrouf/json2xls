@@ -18,12 +18,12 @@ The input JSON file should follow the structure outlined below:
             "repository_name": "Repo 1",
             "debt": [
                 {
-                    "debt_key_1": "value1",
-                    "debt_key_2": "value2"
+                    "object_array_key_1": "value1",
+                    "object_array_key_2": "value2"
                 },
                 {
-                    "debt_key_1": "value3",
-                    "debt_key_2": "value4"
+                    "object_array_key_1": "value3",
+                    "object_array_key_2": "value4"
                 }
             ]
         },
@@ -31,8 +31,8 @@ The input JSON file should follow the structure outlined below:
             "repository_name": "Repo 2",
             "debt": [
                 {
-                    "debt_key_1": "value5",
-                    "debt_key_2": "value6"
+                    "object_array_key_1": "value5",
+                    "object_array_key_2": "value6"
                 }
             ]
         }
@@ -42,7 +42,7 @@ The input JSON file should follow the structure outlined below:
             "repository_name": "Repo 3",
             "debt": [
                 {
-                    "debt_key_1": "value7"
+                    "object_array_key_1": "value7"
                 }
             ]
         }

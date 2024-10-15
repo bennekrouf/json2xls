@@ -1,14 +1,25 @@
 mod generate_excel_from_json;
+mod models;
 
 use crate::generate_excel_from_json::generate_excel_from_json;
+use crate::models::ExcelConfig;
+
+use xlsxwriter::format::FormatColor;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Specify the JSON file path and the output Excel file path
-    let json_file_path = "all_projects.json";
-    let output_excel_file = "all_output.xlsx";
+    // Create the Excel configuration
+    let config = ExcelConfig {
+        json_file_path: "all_projects.json".to_string(),
+        output_excel_file: "all_output.xlsx".to_string(),
+        title_bg_color: 0x565E73,                    // Blue background for title
+        title_font_color: FormatColor::White,        // White font for title
+        row_alt_color: 0xADD8E6,                     // Light blue background for alternating rows
+        repository_name_key: "application".to_string(),  // JSON key for repository name
+        object_array_key: "debt".to_string(),                // JSON key for debt
+    };
 
     // Generate Excel from the JSON input
-    generate_excel_from_json(json_file_path, output_excel_file)?;
+    generate_excel_from_json(config)?;
 
     Ok(())
 }
